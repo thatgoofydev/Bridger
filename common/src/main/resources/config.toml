@@ -1,0 +1,9 @@
+[proxy]
+proxy-id = "proxy-1"
+heartbeat-interval = 5
+override-player-count = true
+
+[[redis.connection]]
+host = "127.0.0.1"
+port = 6379
+# password = "password"

@@ -12,7 +12,7 @@ public final class RedisManagerFactory {
     public static RedisManager create(BridgerPlugin plugin) {
         RedisConfiguration redisConfiguration = plugin.getConfiguration().getRedisConfiguration();
         if(redisConfiguration.getRedisURIs().size() > 1) {
-            return null; // cluster
+            return null; // TODO cluster
         }
 
         return new StandaloneRedisManager(plugin, redisConfiguration);

@@ -24,6 +24,7 @@ public class RedisDataManager {
     public static final String PREFIX_PROXY_HEARTBEAT = "proxy:heartbeats:";
 
     public static final String PREFIX_USER = "user:";
+    public static final String FIELD_USER_USERNAME = "username";
     public static final String FIELD_USER_IP = "ip";
     public static final String FIELD_USER_PROXY = "proxy";
     public static final String FIELD_USER_SERVER = "server";
@@ -33,6 +34,7 @@ public class RedisDataManager {
 
     private final Cache<UUID, String> playerProxyCache;
     private final Cache<UUID, String> playerIpCache;
+    private final Cache<UUID, String> playerUsernameCache;
 
     private LuaScript getTotalPlayerCountScript;
     private LuaScript getActiveProxies;
@@ -47,6 +49,11 @@ public class RedisDataManager {
                 .build();
 
         this.playerIpCache = CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .expireAfterWrite(1, TimeUnit.HOURS)
+                .build();
+
+        this.playerUsernameCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
@@ -76,6 +83,7 @@ public class RedisDataManager {
             commands.multi();
 
             Map<String, String> playerData = new HashMap<>();
+            playerData.put(FIELD_USER_USERNAME, user.getUsername());
             playerData.put(FIELD_USER_IP, user.getIp());
             playerData.put(FIELD_USER_PROXY, user.getProxy().getId());
             playerData.put(FIELD_USER_SERVER, user.getServer());
@@ -92,17 +100,21 @@ public class RedisDataManager {
 
         this.redisManager.execute(commands -> {
             commands.multi();
-            commands.hdel(key, FIELD_USER_IP, FIELD_USER_PROXY, FIELD_USER_SERVER);
+            commands.hdel(key, FIELD_USER_USERNAME, FIELD_USER_IP, FIELD_USER_PROXY, FIELD_USER_SERVER);
             commands.srem(proxyOnlineKey, user.getUniqueId().toString());
             commands.exec();
         });
     }
 
-    public String getPlayerServer(UUID id) {
-        final String userKey = PREFIX_USER + id.toString();
-        return this.redisManager.execute(commands -> {
-            return commands.hget(userKey, FIELD_USER_SERVER);
-        });
+    public String getPlayerUsername(UUID id) {
+        try {
+            return this.playerUsernameCache.get(id, () -> this.redisManager.execute(commands -> {
+                final String userKey = PREFIX_USER + id.toString();
+                return commands.hget(userKey, FIELD_USER_USERNAME);
+            }));
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Unable to get username for " + id, e);
+        }
     }
 
     public String getPlayerIp(UUID id) {
@@ -112,7 +124,7 @@ public class RedisDataManager {
                 return commands.hget(userKey, FIELD_USER_IP);
             }));
         } catch (ExecutionException e) {
-            throw new RuntimeException("Unable to get proxy for " + id, e);
+            throw new RuntimeException("Unable to get ip for " + id, e);
         }
     };
 
@@ -128,6 +140,13 @@ public class RedisDataManager {
         } catch (ExecutionException e) {
             throw new RuntimeException("Unable to get proxy for " + id, e);
         }
+    }
+
+    public String getPlayerServer(UUID id) {
+        final String userKey = PREFIX_USER + id.toString();
+        return this.redisManager.execute(commands -> {
+            return commands.hget(userKey, FIELD_USER_SERVER);
+        });
     }
 
     public void changeUserServer(User user, String serverName) {

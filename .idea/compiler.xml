@@ -6,10 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="bungee" />
+        <module name="bridger-common" />
+        <module name="common" />
+        <module name="bridger-api" />
+        <module name="bridger-velocity" />
         <module name="api" />
         <module name="velocity" />
-        <module name="common" />
-        <module name="bungee" />
+        <module name="bridger-bungee" />
       </profile>
     </annotationProcessing>
   </component>

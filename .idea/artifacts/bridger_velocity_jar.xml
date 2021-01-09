@@ -1,10 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="bridger-velocity:jar">
-    <output-path>E:/mc/servers/velocity-1/plugins</output-path>
+    <output-path>$PROJECT_DIR$/../Servers/velocity/plugins</output-path>
     <root id="archive" name="bridger-velocity.jar">
-      <element id="module-output" name="velocity" />
-      <element id="module-output" name="common" />
-      <element id="module-output" name="api" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/lettuce/lettuce-core/5.3.0.RELEASE/lettuce-core-5.3.0.RELEASE.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_annotations/2.1.3/error_prone_annotations-2.1.3.jar" path-in-jar="/" />
@@ -25,6 +22,9 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.5/gson-2.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec/4.1.49.Final/netty-codec-4.1.49.Final.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava/25.1-jre/guava-25.1-jre.jar" path-in-jar="/" />
+      <element id="module-output" name="bridger-api" />
+      <element id="module-output" name="bridger-common" />
+      <element id="module-output" name="bridger-velocity" />
     </root>
   </artifact>
 </component>

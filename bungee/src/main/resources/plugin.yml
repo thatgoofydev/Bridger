@@ -1,4 +1,4 @@
 name: bridger-bungeecord
-main: com.opennetworksmc.bridger.bungee.BridgerBungeeBootstrap
+main: be.goofydev.bridger.bungee.BridgerBungeeBootstrap
 version: 1.0
 author: goofydev
